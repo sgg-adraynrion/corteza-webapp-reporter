@@ -7,17 +7,20 @@ import './plugins'
 import './mixins'
 import './components'
 
-import i18n from './i18n'
-
 import router from './router'
+
+import { i18n } from '@cortezaproject/corteza-vue'
 
 export default (options = {}) => {
   options = {
     el: '#app',
     name: 'reporter',
-    template: '<div v-if="loaded" class="h-100"><router-view/></div>',
+    template: '<div v-if="loaded && i18nLoaded" class="h-100"><router-view/></div>',
 
-    data: () => ({ loaded: false }),
+    data: () => ({
+      loaded: false,
+      i18nLoaded: false,
+    }),
 
     async created () {
       this.$auth.handle().then(({ accessTokenFn, user }) => {
@@ -48,7 +51,9 @@ export default (options = {}) => {
     },
 
     router,
-    i18n: i18n(),
+    i18n: i18n(Vue,
+      'reporter',
+    ),
 
     // Any additional options we want to merge
     ...options,
